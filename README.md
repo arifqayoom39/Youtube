@@ -15,7 +15,7 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 
 ### Home Feed
 
-| ![Signup](https://github.com/arifqayoom39/Youtube/blob/main/assets/signup.jpeg) | ![Login](https://github.com/arifqayoom39/Youtube/blob/main/assets/login.jpeg) | ![Feed](path/to/home_feed_screenshot3.png) |
+| ![Signup](https://github.com/arifqayoom39/Youtube/blob/main/assets/signup.jpeg) | ![Login](https://github.com/arifqayoom39/Youtube/blob/main/assets/login.jpeg) | ![Feed](https://github.com/arifqayoom39/Youtube/blob/main/assets/feed.jpeg) |
 |----------------------------------------------|-------------------------------------------|------------------------------------------|
 
 ### Video Interaction
@@ -29,7 +29,7 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/arifqayoom39/Youtube/
+   git clone https://github.com/arifqayoom39/Youtube.git
    cd youtube-clone
    ```
 
