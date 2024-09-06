@@ -1,6 +1,3 @@
-Certainly! Below is the updated README with the screenshots arranged as per your request:
-
-```markdown
 # YouTube Clone
 
 A YouTube clone application built with Flutter and Appwrite. This application allows users to upload content, interact with videos, and manage their subscriptions and profiles.
