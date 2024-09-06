@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -5,11 +7,13 @@ import 'package:appwrite/appwrite.dart';
 import 'package:youtube/features/auth/auth_provider.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
+  const EditProfilePage({super.key});
+
   @override
-  _EditProfilePageState createState() => _EditProfilePageState();
+  EditProfilePageState createState() => EditProfilePageState();
 }
 
-class _EditProfilePageState extends ConsumerState<EditProfilePage> {
+class EditProfilePageState extends ConsumerState<EditProfilePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
@@ -19,11 +23,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: userAsyncValue.when(
         data: (user) {
-          if (user == null) return Center(child: Text('No user found'));
+          if (user == null) return const Center(child: Text('No user found'));
 
           _nameController.text = user.name;
           _emailController.text = user.email;
@@ -34,32 +38,32 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: InputDecoration(labelText: 'Name'),
+                  decoration: const InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: const InputDecoration(labelText: 'Email'),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _updateUserDetails(
                     user.$id,
                     _nameController.text,
                     _emailController.text,
                   ),
-                  child: Text('Update Details'),
+                  child: const Text('Update Details'),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () => _updateProfileImage(user.$id),
-                  child: Text('Update Profile Image'),
+                  child: const Text('Update Profile Image'),
                 ),
               ],
             ),
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(child: Text('Failed to load user data')),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => const Center(child: Text('Failed to load user data')),
       ),
     );
   }
@@ -78,12 +82,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Details updated successfully')),
+        const SnackBar(content: Text('Details updated successfully')),
       );
     } catch (e) {
       debugPrint('Error updating user details: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update details')),
+        const SnackBar(content: Text('Failed to update details')),
       );
     }
   }
@@ -114,12 +118,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile image updated successfully')),
+          const SnackBar(content: Text('Profile image updated successfully')),
         );
       } catch (e) {
         debugPrint('Error updating profile image: $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile image')),
+          const SnackBar(content: Text('Failed to update profile image')),
         );
       }
     }

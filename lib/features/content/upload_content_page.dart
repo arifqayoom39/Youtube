@@ -1,20 +1,24 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart' as models;
+
 import 'package:uuid/uuid.dart';
 import '../models/content_model.dart';
 import 'package:youtube/features/auth/auth_provider.dart';
 
 class UploadContentPage extends ConsumerStatefulWidget {
+  const UploadContentPage({super.key});
+
   @override
-  _UploadContentPageState createState() => _UploadContentPageState();
+  UploadContentPageState createState() => UploadContentPageState();
 }
 
-class _UploadContentPageState extends ConsumerState<UploadContentPage> {
+class UploadContentPageState extends ConsumerState<UploadContentPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   File? _videoFile;
@@ -55,7 +59,7 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
 
   Future<String> _uploadFile(File file, String bucketId, String fileType) async {
     final storage = ref.read(storageProvider);
-    final uniqueId = Uuid().v4();
+    final uniqueId = const Uuid().v4();
 
     try {
       final uploadResult = await storage.createFile(
@@ -63,11 +67,9 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
         fileId: uniqueId,
         file: InputFile(path: file.path),
       );
-      print('$fileType uploaded successfully: ${uploadResult.$id}');
       return uploadResult.$id;
     } catch (e) {
-      print('Upload Failed for $fileType: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -79,7 +81,7 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
 
     if (_videoFile == null || _thumbnailFile == null || currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please provide all fields')),
+        const SnackBar(content: Text('Please provide all fields')),
       );
       return;
     }
@@ -93,7 +95,7 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
       final videoId = await _uploadFile(_videoFile!, '6427d4792ddd2c15bbdd', 'Video');
       final thumbnailId = await _uploadFile(_thumbnailFile!, '6427d4792ddd2c15bbdd', 'Thumbnail');
 
-      final contentId = Uuid().v4();
+      final contentId = const Uuid().v4();
 
       final content = ContentModel(
         id: contentId,
@@ -114,15 +116,13 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
         documentId: content.id,
         data: content.toMap(),
       );
-      print('Content saved successfully: ${content.id}');
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Content uploaded successfully')),
+        const SnackBar(content: Text('Content uploaded successfully')),
       );
 
       // No need to navigate to another page, stay on the same page
     } catch (e) {
-      print('Upload Failed: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Upload Failed: $e')),
       );
@@ -137,9 +137,9 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Content'),
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
+        title: const Text('Upload Content'),
+        backgroundColor: Colors.red,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -155,7 +155,7 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
                         color: Colors.black,
                       ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _thumbnailFile == null
                     ? GestureDetector(
                         onTap: _pickThumbnail,
@@ -163,7 +163,7 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
                           width: double.infinity,
                           height: 180,
                           color: Colors.grey[300],
-                          child: Center(child: Text('Select Thumbnail')),
+                          child: const Center(child: Text('Select Thumbnail')),
                         ),
                       )
                     : Image.file(
@@ -172,33 +172,33 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
                         height: 180,
                         fit: BoxFit.cover,
                       ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _pickThumbnail,
-                  child: Text('Change Thumbnail'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
+                  child: const Text('Change Thumbnail'),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _titleController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Title',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.title),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Description',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.description),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _videoFile == null
                     ? GestureDetector(
                         onTap: _pickVideo,
@@ -206,43 +206,43 @@ class _UploadContentPageState extends ConsumerState<UploadContentPage> {
                           width: double.infinity,
                           height: 180,
                           color: Colors.grey[300],
-                          child: Center(child: Text('Select Video')),
+                          child: const Center(child: Text('Select Video')),
                         ),
                       )
                     : Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Video Selected:'),
-                            SizedBox(height: 8),
+                            const Text('Video Selected:'),
+                            const SizedBox(height: 8),
                             Text(_videoFile!.path),
                           ],
                         ),
                       ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _pickVideo,
-                  child: Text('Change Video'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
+                  child: const Text('Change Video'),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _uploadContent,
-                  child: Text('Upload Content'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                   ),
+                  child: const Text('Upload Content'),
                 ),
               ],
             ),
             if (_isLoading)
-              Center(
+              const Center(
                 child: CircularProgressIndicator(),
               ),
           ],

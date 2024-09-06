@@ -1,3 +1,5 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:appwrite/appwrite.dart';
@@ -32,20 +34,20 @@ class ProfilePage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
           'Profile',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: const Icon(Icons.edit, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => EditProfilePage()),
+                MaterialPageRoute(builder: (context) => const EditProfilePage()),
               );
             },
           ),
@@ -54,169 +56,168 @@ class ProfilePage extends ConsumerWidget {
       body: userAsyncValue.when(
         data: (user) {
           if (user == null) {
-            debugPrint('No user found');
-            return Center(child: Text('No user found'));
+            return Center(child: Text('No user found', style: TextStyle(fontSize: 18, color: Colors.grey[700])));
           }
 
           final userId = user.$id;
-          debugPrint('User ID: $userId');
 
           return FutureBuilder<models.Document>(
             future: _fetchUserDetails(userId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return Center(child: Text('Failed to load user data'));
+                return const Center(child: Text('Failed to load user data', style: TextStyle(fontSize: 18, color: Colors.red)));
               }
               if (!snapshot.hasData) {
-                return Center(child: Text('User data not found'));
+                return Center(child: Text('User data not found', style: TextStyle(fontSize: 18, color: Colors.grey[700])));
               }
 
               final userData = UserModel.fromMap(snapshot.data!.data);
-              debugPrint('User data fetched: ${userData.toMap()}');
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: CachedNetworkImageProvider(
-                              userData.profilePictureUrl,
-                            ),
-                            onBackgroundImageError: (error, stackTrace) {
-                              debugPrint('Failed to load profile picture: $error');
-                            },
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    color: Colors.black,
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: CachedNetworkImageProvider(
+                            userData.profilePictureUrl,
                           ),
-                          SizedBox(height: 16),
-                          Text(
-                            userData.name,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
+                          onBackgroundImageError: (error, stackTrace) {
+                            debugPrint('Failed to load profile picture: $error');
+                          },
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userData.name,
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                userData.email,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                '${userData.subscriptions.length} Subscribers', // Display the number of subscriptions
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            userData.email,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          SizedBox(height: 24),
-                          Divider(color: Colors.grey[300]),
-                          SizedBox(height: 16),
-                          Text(
-                            'Uploaded Videos',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: userContentAsyncValue.when(
-                        data: (contents) {
-                          if (contents.isEmpty) {
-                            return Center(child: Text('No content uploaded.'));
-                          }
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: userContentAsyncValue.when(
+                      data: (contents) {
+                        if (contents.isEmpty) {
+                          return Center(child: Text('No content uploaded.', style: TextStyle(fontSize: 18, color: Colors.grey[700])));
+                        }
 
-                          return GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: contents.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 16,
-                              mainAxisSpacing: 16,
-                              childAspectRatio: 16 / 9,
-                            ),
-                            itemBuilder: (context, index) {
-                              final content = contents[index];
+                        return ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          itemCount: contents.length,
+                          itemBuilder: (context, index) {
+                            final content = contents[index];
 
-                              return GestureDetector(
-                                onTap: () {
-                                  // Navigate to VideoPlayerPage with the content ID
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => VideoPlayerPage(
-                                        contentId: content.id, // Pass the content ID to VideoPlayerPage
-                                      ),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => VideoPlayerPage(
+                                      contentId: content.id,
                                     ),
-                                  );
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Row(
                                   children: [
+                                    CachedNetworkImage(
+                                      imageUrl: content.thumbnailUrl,
+                                      height: 90,
+                                      width: 160,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) {
+                                        return Container(
+                                          color: Colors.grey[300],
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
+                                      },
+                                      errorWidget: (context, url, error) {
+                                        return const Icon(Icons.error);
+                                      },
+                                    ),
+                                    const SizedBox(width: 12),
                                     Expanded(
-                                      child: CachedNetworkImage(
-                                        imageUrl: content.thumbnailUrl,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) {
-                                          return Container(
-                                            color: Colors.grey[300],
-                                            child: Center(
-                                              child: CircularProgressIndicator(),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            content.title,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
                                             ),
-                                          );
-                                        },
-                                        errorWidget: (context, url, error) {
-                                          return Icon(Icons.error);
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 2),
-                                    Text(
-                                      content.title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      '${content.views} views',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${content.views} views',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              );
-                            },
-                          );
-                        },
-                        loading: () => Center(child: CircularProgressIndicator()),
-                        error: (error, _) => Center(child: Text('Failed to load content')),
-                      ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      error: (error, _) => const Center(child: Text('Failed to load content', style: TextStyle(fontSize: 18, color: Colors.red))),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               );
             },
           );
         },
-        loading: () => Center(child: CircularProgressIndicator()),
-        error: (error, _) => Center(child: Text('Failed to load user data')),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => const Center(child: Text('Failed to load user data', style: TextStyle(fontSize: 18, color: Colors.red))),
       ),
     );
   }

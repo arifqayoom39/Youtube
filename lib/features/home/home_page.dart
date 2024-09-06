@@ -4,6 +4,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as models;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:youtube/features/content/video_player.dart';
+import 'package:youtube/features/home/search_page.dart';
 import 'package:youtube/features/models/content_model.dart';
 import 'package:youtube/features/auth/auth_provider.dart';
 
@@ -67,7 +68,13 @@ class HomePage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.search, color: Colors.black),
             onPressed: () {
-              // Implement search functionality here
+              // Navigate to ContentListPage when search icon is pressed
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ContentUserListPage(),
+                ),
+              );
             },
           ),
           IconButton(

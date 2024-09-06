@@ -4,16 +4,18 @@ import '../profile/profile_page.dart';
 import '../content/upload_content_page.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
-  _MainPageState createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
-  static List<Widget> _pages = <Widget>[
-    HomePage(),
-    UploadContentPage(), // Upload content page for adding videos
+  static final List<Widget> _pages = <Widget>[
+    const HomePage(),
+    const UploadContentPage(), // Upload content page for adding videos
     ProfilePage(),
   ];
 
@@ -29,7 +31,7 @@ class _MainPageState extends State<MainPage> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home, color: Colors.red),
