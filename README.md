@@ -1,3 +1,6 @@
+Certainly! Below is the updated README with the screenshots arranged as per your request:
+
+```markdown
 # YouTube Clone
 
 A YouTube clone application built with Flutter and Appwrite. This application allows users to upload content, interact with videos, and manage their subscriptions and profiles.
@@ -30,7 +33,7 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/youtube-clone.git
+   git clone https://github.com/arifqayoom39/Youtube/
    cd youtube-clone
    ```
 
@@ -69,4 +72,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Contact
 
 For any questions or issues, please contact [email](arifqayoom39@gmail.com).
-
