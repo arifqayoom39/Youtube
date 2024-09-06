@@ -15,15 +15,15 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 
 ### Home Feed
 
-![Home Feed Screenshot 1](path/to/home_feed_screenshot1.png)
-![Home Feed Screenshot 2](path/to/home_feed_screenshot2.png)
-![Home Feed Screenshot 3](path/to/home_feed_screenshot3.png)
+![Signup](https://github.com/arifqayoom39/Youtube/blob/main/assets/signup.jpeg)
+![Login](https://github.com/arifqayoom39/Youtube/blob/main/assets/login.jpeg)
+![Feed](path/to/home_feed_screenshot3.png)
 
 ### Video Interaction
 
-![Video Interaction Screenshot 1](path/to/video_interaction_screenshot1.png)
-![Video Interaction Screenshot 2](path/to/video_interaction_screenshot2.png)
-![Video Interaction Screenshot 3](path/to/video_interaction_screenshot3.png)
+![Player](https://github.com/arifqayoom39/Youtube/blob/main/assets/player.jpeg)
+![Search](https://github.com/arifqayoom39/Youtube/blob/main/assets/search.jpeg)
+![Profile](https://github.com/arifqayoom39/Youtube/blob/main/assets/userprofile.jpeg)
 
 ## Installation
 
