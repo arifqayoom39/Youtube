@@ -72,8 +72,8 @@ class EditProfilePageState extends ConsumerState<EditProfilePage> {
     try {
       final database = ref.read(databaseProvider);
       await database.updateDocument(
-        databaseId: '64266e17ca25c2989d87',
-        collectionId: '64266e290b1360e8d4b5',
+        databaseId: 'data',
+        collectionId: 'users',
         documentId: userId,
         data: {
           'name': name,
@@ -105,12 +105,12 @@ class EditProfilePageState extends ConsumerState<EditProfilePage> {
           file: InputFile.fromPath(path: image.path),
         );
 
-        final imageUrl = 'https://cloud.appwrite.io/v1/storage/buckets/6427d4792ddd2c15bbdd/files/${uploadedFile.$id}/view?project=641c98b6c77b8608f2e5&mode=admin';
+        final imageUrl = 'https://cloud.appwrite.io/v1/storage/buckets/bucketid/files/${uploadedFile.$id}/view?project=projectid&mode=admin';
 
         final database = ref.read(databaseProvider);
         await database.updateDocument(
-          databaseId: '64266e17ca25c2989d87',
-          collectionId: '64266e290b1360e8d4b5',
+          databaseId: 'data',
+          collectionId: 'content',
           documentId: userId,
           data: {
             'profilePictureUrl': imageUrl,

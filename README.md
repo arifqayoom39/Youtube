@@ -11,6 +11,12 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 - **Comment on Videos**: Leave comments on videos to interact with other viewers.
 - **Subscribe to Channels/Users**: Subscribe to channels or users to follow their content.
 
+## Download & Test
+
+If you want to test the app on Android, download it from [Google Drive](https://drive.google.com/file/d/18KOPsW6GxvQRV0x7j_TD6pp4Y_jx-z15/view?usp=drivesdk).
+
+
+
 ## Screenshots
 
 ### Home Feed
@@ -43,7 +49,7 @@ A YouTube clone application built with Flutter and Appwrite. This application al
 
 3. **Configure Appwrite**
 
-   Set up an Appwrite server and configure your project in the `lib/config/appwrite_config.dart` file with your server details and API keys.
+   Set up an Appwrite server and configure your project in each file with your server details and API keys.
 
 4. **Run the Application**
 

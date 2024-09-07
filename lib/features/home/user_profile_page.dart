@@ -9,10 +9,10 @@ import 'package:youtube/features/models/user_model.dart';
 
 // Define Appwrite configurations
 const String appwriteEndpoint = 'https://cloud.appwrite.io/v1';
-const String projectId = '641c98b6c77b8608f2e5';
-const String databaseId = '64266e17ca25c2989d87';
-const String usersCollectionId = '64266e290b1360e8d4b5';
-const String contentCollectionId = '66d72ebd003532c7221e'; // Add your actual content collection ID
+const String projectId = 'project';
+const String databaseId = 'data';
+const String usersCollectionId = 'users';
+const String contentCollectionId = 'content'; // Add your actual content collection ID
 
 // Create a client instance for Appwrite
 final Client client = Client()

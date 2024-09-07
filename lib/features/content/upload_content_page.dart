@@ -28,7 +28,7 @@ class UploadContentPageState extends ConsumerState<UploadContentPage> {
 
   final Client _client = Client();
   final String endpoint = 'https://cloud.appwrite.io/v1';
-  final String projectId = '641c98b6c77b8608f2e5';
+  final String projectId = 'project';
 
   @override
   void initState() {
@@ -92,8 +92,8 @@ class UploadContentPageState extends ConsumerState<UploadContentPage> {
       });
 
       // Sequentially upload video and thumbnail
-      final videoId = await _uploadFile(_videoFile!, '6427d4792ddd2c15bbdd', 'Video');
-      final thumbnailId = await _uploadFile(_thumbnailFile!, '6427d4792ddd2c15bbdd', 'Thumbnail');
+      final videoId = await _uploadFile(_videoFile!, 'bucket', 'Video');
+      final thumbnailId = await _uploadFile(_thumbnailFile!, 'bucket', 'Thumbnail');
 
       final contentId = const Uuid().v4();
 
@@ -101,8 +101,8 @@ class UploadContentPageState extends ConsumerState<UploadContentPage> {
         id: contentId,
         title: title,
         description: description,
-        videoUrl: '$endpoint/storage/buckets/6427d4792ddd2c15bbdd/files/$videoId/view?project=$projectId&mode=admin',
-        thumbnailUrl: '$endpoint/storage/buckets/6427d4792ddd2c15bbdd/files/$thumbnailId/view?project=$projectId&mode=admin',
+        videoUrl: '$endpoint/storage/buckets/bucket/files/$videoId/view?project=$projectId&mode=admin',
+        thumbnailUrl: '$endpoint/storage/buckets/bucket/files/$thumbnailId/view?project=$projectId&mode=admin',
         userId: currentUser.$id,
         likesCount: 0,
         comments: [],
@@ -111,8 +111,8 @@ class UploadContentPageState extends ConsumerState<UploadContentPage> {
       );
 
       await database.createDocument(
-        databaseId: '64266e17ca25c2989d87',
-        collectionId: '66d72ebd003532c7221e',
+        databaseId: 'data',
+        collectionId: 'content',
         documentId: content.id,
         data: content.toMap(),
       );

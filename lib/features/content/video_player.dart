@@ -467,10 +467,10 @@ import 'package:youtube/features/auth/auth_provider.dart';
 import 'dart:convert';
 
 const String appwriteEndpoint = 'https://cloud.appwrite.io/v1';
-const String projectId = '641c98b6c77b8608f2e5';
-const String databaseId = '64266e17ca25c2989d87';
-const String usersCollectionId = '64266e290b1360e8d4b5';
-const String contentCollectionId = '66d72ebd003532c7221e';
+const String projectId = 'project';
+const String databaseId = 'data';
+const String usersCollectionId = 'users';
+const String contentCollectionId = 'content';
 
 final Client client = Client()
   ..setEndpoint(appwriteEndpoint)
@@ -760,70 +760,105 @@ class VideoPlayerPageState extends ConsumerState<VideoPlayerPage> {
   }
 
   void _showCommentsSection(BuildContext context) async {
-    final userAsyncValue = ref.read(currentUserProvider);
+  final userAsyncValue = ref.read(currentUserProvider);
+  final FocusNode _commentFocusNode = FocusNode(); // Create a FocusNode for TextField
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return userAsyncValue.when(
-          data: (currentUser) {
-            final currentUserId = currentUser!.$id;
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true, // Allows the bottom sheet to adjust for the keyboard
+    builder: (context) {
+      return userAsyncValue.when(
+        data: (currentUser) {
+          final currentUserId = currentUser!.$id;
 
-            return FutureBuilder<List<Map<String, String>>>(
-              future: _fetchCommentersDetails(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-                final commentersDetails = snapshot.data ?? [];
-
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _comments.length,
-                        itemBuilder: (context, index) {
-                          final comment = _comments[index];
-                          final commenter = commentersDetails
-                              .firstWhere(
-                                (details) => details['userId'] == comment['userId'],
-                                orElse: () => {'name': 'Unknown', 'profilePictureUrl': ''},
-                              );
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: NetworkImage(commenter['profilePictureUrl'] ?? ''),
-                              radius: 20,
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom, // Adjusts for the keyboard
+                ),
+                child: FractionallySizedBox(
+                  heightFactor: 0.7, // Adjusts the height of the bottom sheet
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Comments',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            title: Text(commenter['name'] ?? 'Unknown User'),
-                            subtitle: Text(comment['commentText'] ?? 'No text'),
-                          );
-                        },
+                            IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextField(
-                        decoration: const InputDecoration(hintText: 'Add a comment...'),
-                        onSubmitted: (commentText) => _addComment(currentUserId, commentText),
+                      Expanded(
+                        child: FutureBuilder<List<Map<String, String>>>(
+                          future: _fetchCommentersDetails(), // Fetch commenter details
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+
+                            final commentersDetails = snapshot.data ?? [];
+
+                            return ListView.builder(
+                              itemCount: _comments.length,
+                              itemBuilder: (context, index) {
+                                final comment = _comments[index];
+                                final commenter = commentersDetails.firstWhere(
+                                  (details) => details['userId'] == comment['userId'],
+                                  orElse: () => {'name': 'Unknown', 'profilePictureUrl': ''},
+                                );
+
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(commenter['profilePictureUrl'] ?? ''),
+                                    radius: 20,
+                                  ),
+                                  title: Text(commenter['name'] ?? 'Unknown User'),
+                                  subtitle: Text(comment['commentText'] ?? 'No text'),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          loading: () => const CircularProgressIndicator(),
-          error: (error, _) => const Text('Error loading user data'),
-        );
-      },
-    );
-  }
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          focusNode: _commentFocusNode, // Assign FocusNode to TextField
+                          decoration: const InputDecoration(hintText: 'Add a comment...'),
+                          onSubmitted: (commentText) {
+                            _addComment(currentUserId, commentText); // Add comment functionality
+                            setState(() {}); // Update UI
+                          },
+                          autofocus: true, // Automatically focus TextField to bring up keyboard
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()), // Show loading indicator
+        error: (error, _) => const Text('Error loading user data'), // Show error message if user data fails
+      );
+    },
+  ).whenComplete(() => _commentFocusNode.dispose()); // Dispose of FocusNode when sheet is closed
+}
+
 
   Future<List<Map<String, String>>> _fetchCommentersDetails() async {
     final userIds = _comments.map((comment) => comment['userId'] as String).toSet();
